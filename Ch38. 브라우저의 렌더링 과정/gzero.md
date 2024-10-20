@@ -84,4 +84,26 @@
   - 여러개의 script 태그에 async 어트리뷰트를 지정하면 script 태그의 순서와 상관없이 로드가 완료된 자바스크립트 파일부터 파싱과 실행이 되어 순서가 보장되지 않는다
 - defer
   - **HTML 파싱이 완료**된 후 자바스크립트 파싱과 실행이 이뤄진다. 즉 DOM 생성이 완료된 직후 자바스크립트 파싱 후 실행된다.
-  - ❗️리액트로 만든 앱들은 index.html script 태그에 defer 이 있는 것을 확인할 수 있다.
+
+❗️리액트로 만든 앱들은 index.html script 태그에 defer 이 있는 것을 확인할 수 있다. next.js로 만든 앱들은 script async가 있는 것을 확인할 수 있다!
+
+> **CSR (Client-Side Rendering)**과 **SSR (Server-Side Rendering)**의 차이에 따라 `script defer`와 `script async`를 사용하는 방식이 다를 수 있습니다. React 앱과 Next.js 앱에서의 차이는 이 두 렌더링 방식과 밀접한 관련이 있습니다.
+>
+> ### \*CSR (Client-Side Rendering)\*\*와 `script defer`
+>
+> - **React**는 주로 CSR을 사용합니다. CSR은 클라이언트에서 JavaScript 파일을 다운로드하고 실행한 후, 페이지의 HTML을 동적으로 생성합니다. 이 과정에서 페이지가 처음 로드될 때 HTML 파일에는 최소한의 구조만 있고, 대부분의 콘텐츠는 브라우저에서 JavaScript가 실행된 이후에 렌더링됩니다.
+>   여기서 **`script defer`**는 적합합니다. `defer`는 HTML 문서의 파싱이 끝난 후에 JavaScript 파일을 실행합니다. 즉, 전체 HTML을 먼저 파싱하고 나서 스크립트를 실행하여 화면을 그립니다. 이렇게 하면 페이지가 더 빠르게 초기화되고, JavaScript가 화면 렌더링을 방해하지 않으므로 **CSR 방식**에 더 적합합니다.
+>   - **React 앱**에서 `script defer`를 사용하는 이유는, HTML 문서 파싱이 완료된 후 JavaScript가 실행되어도 문제 없기 때문입니다. 즉, 스크립트가 미리 실행될 필요 없이 HTML 구조가 완성된 후에 실행되도록 조정하는 것이 자연스럽습니다.
+>
+> ### \*SSR (Server-Side Rendering)\*\*와 `script async`
+>
+> - **Next.js**는 주로 SSR을 사용합니다. SSR은 서버에서 미리 HTML을 생성하여 클라이언트에게 전달하는 방식입니다. 브라우저가 HTML을 수신할 때, 이미 서버에서 렌더링된 HTML 구조가 완성되어 있기 때문에, JavaScript는 페이지의 인터랙션을 보완하거나 추가 기능을 제공하기 위해 주로 사용됩니다.
+>   이때 **`script async`**가 적합할 수 있습니다. `async`는 JavaScript 파일을 HTML 파싱과 동시에 다운로드하고, 파일이 준비되면 HTML 파싱을 중단하고 즉시 스크립트를 실행합니다. **SSR 방식**에서는 이미 HTML이 서버에서 준비되어 있으므로, 스크립트를 더 빠르게 실행하여 인터랙션을 추가하는 것이 유리할 수 있습니다.
+>   - **Next.js 앱**에서 `script async`를 사용하는 이유는, 서버에서 이미 완성된 HTML을 클라이언트가 받기 때문에, JavaScript가 다운로드되는 대로 즉시 실행하여 페이지의 인터랙션을 빠르게 준비하는 것이 더 효율적일 수 있기 때문입니다.
+>
+> ### 요약
+>
+> - **CSR (Client-Side Rendering)**: 주로 **React 앱**에서는 `script defer`가 더 적합합니다. HTML을 다 파싱한 후에 JavaScript가 실행되도록 하여 초기 HTML 구조가 먼저 렌더링되도록 보장합니다.
+> - **SSR (Server-Side Rendering)**: **Next.js 앱**에서는 `script async`를 사용하여, 스크립트를 최대한 빠르게 실행하고, 클라이언트에서의 추가적인 JavaScript 기능을 빠르게 활성화할 수 있습니다.
+>
+> 이 차이는 CSR과 SSR의 본질적인 동작 방식에서 오는 자연스러운 스크립트 로딩 전략의 차이라고 볼 수 있어요!
